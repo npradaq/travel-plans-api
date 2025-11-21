@@ -177,3 +177,29 @@ El proyecto está preparado siguiendo buenas prácticas de NestJS:
 - Consumo de APIs externas
 - Manejo adecuado de excepciones
 - Pruebas unitarias completas
+
+Extensión de la API en el parcial
+
+En el parcial se extendió la API original agregando soporte para el borrado protegido de países en caché. Se añadió un endpoint DELETE /countries/:code que elimina un país de la colección solo si no tiene planes de viaje asociados, respetando la separación por módulos entre countries y travel-plans. Además, se aseguró que todas las operaciones relevantes pasen por un middleware de logging que registra método, ruta, estado de respuesta y tiempo de procesamiento.
+
+También se integró un guard específico para proteger la operación de borrado. De esta forma, la API no solo permite consultar y crear información, sino que controla quién puede realizar operaciones destructivas y bajo qué condiciones, cumpliendo con una lógica de negocio más cercana a un entorno de producción.
+
+Endpoint protegido, guard y middleware
+
+El endpoint protegido es:
+DELETE /countries/:code
+
+Este endpoint solo puede ejecutarse si la petición incluye un token válido en el header:
+x-delete-token: clave-delete
+
+El DeleteCountryGuard verifica la presencia y validez de ese token.
+Si el token no está presente o no coincide con el esperado, el guard lanza una excepción de autorización (código 401) y la petición no llega al servicio.
+Si el token es válido, el servicio comprueba primero si existen planes de viaje con countryCode igual al código del país. Si hay planes asociados, responde con un error 400 y no borra el país; si no hay planes, elimina el documento de la caché.
+
+El middleware de logging se aplica a las rutas /countries y /travel-plans. Para cada petición registra:
+- Método HTTP utilizado (GET, POST, DELETE, etc.)
+- Ruta solicitada (por ejemplo, /countries/JPN)
+- Código de estado de la respuesta (200, 201, 400, 401, 404, etc.)
+- Tiempo total de procesamiento en milisegundos
+
+Estos registros se imprimen por consola y permiten verificar fácilmente el comportamiento de la API durante las pruebas y la grabación del parcial.
