@@ -1,98 +1,179 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Travel Plans API — NestJS, MongoDB, Pruebas, Pipes, Guards y Middleware
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Proyecto desarrollado en NestJS siguiendo las prácticas vistas en clase. Incluye consumo de una API externa, persistencia en MongoDB, validación mediante Pipes, middleware de logging, Guards de API Key y pruebas unitarias completas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Tecnologías utilizadas
 
-## Description
+- NestJS
+- MongoDB + Mongoose
+- Axios / HttpModule
+- Jest
+- Pipes personalizados
+- Middleware de logging
+- Guards de seguridad (API Key)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Instalación
+1. Clonar repositorio
 
-## Project setup
+git clone https://github.com/npradaq/travel-plans-api.git
+cd travel-plans-api
 
-```bash
-$ npm install
-```
+2. Instalar dependencias
 
-## Compile and run the project
+npm install
 
-```bash
-# development
-$ npm run start
+3. Iniciar MongoDB local
 
-# watch mode
-$ npm run start:dev
+MongoDB Compass o MongoDB Server deben estar corriendo.
 
-# production mode
-$ npm run start:prod
-```
+4. Ejecutar la aplicación
 
-## Run tests
+npm run start:dev
 
-```bash
-# unit tests
-$ npm run test
+La API estará disponible en: http://localhost:3000
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
-```
+Arquitectura del proyecto
 
-## Deployment
+src/
+ ├── app.module.ts
+ ├── common/
+ │   ├── middlewares/
+ │   │     └── logging.middleware.ts
+ │   ├── guards/
+ │   │     └── api-key.guard.ts
+ │   └── pipes/
+ │         └── country-code.pipe.ts
+ ├── countries/
+ │   ├── countries.module.ts
+ │   ├── countries.service.ts
+ │   ├── countries.controller.ts
+ │   ├── providers/restcountries.provider.ts
+ │   └── schemas/country.schema.ts
+ ├── travel-plans/
+ │   ├── travel-plans.module.ts
+ │   ├── travel-plans.service.ts
+ │   ├── travel-plans.controller.ts
+ │   ├── pipes/date-range.pipe.ts
+ │   └── schemas/travel-plan.schema.ts
+ └── test/
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Countries API (integración con RestCountries)
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+La API obtiene información de países consumiendo: https://restcountries.com/v3.1/alpha/{code}
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Los países se almacenan en caché (MongoDB) para evitar solicitudes repetidas.
 
-## Resources
+Endpoints principales
 
-Check out a few resources that may come in handy when working with NestJS:
+GET /countries
+Obtiene todos los países almacenados en MongoDB.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+GET /countries/:code
+Obtiene un país por código alpha-3.
 
-## Support
+Este endpoint usa CountryCodePipe, que:
+- Convierte el código a mayúsculas
+- Valida que tenga exactamente tres letras A–Z
+- Si es inválido, devuelve un 400 Bad Request
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Ejemplo: GET /countries/COL
 
-## Stay in touch
+Travel Plans API
+Seguridad con API Key
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Todos los endpoints bajo /travel-plans están protegidos por un Guard que valida:
+x-api-key: api-key
+Si falta o es incorrecta, retorna 401 Unauthorized.
 
-## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+POST /travel-plans
+
+Crea un nuevo plan de viaje.
+
+Este endpoint usa DateRangePipe, que valida:
+- startDate y endDate deben ser fechas válidas
+- startDate debe ser menor o igual a endDate
+- Si la validación falla, retorna 400 Bad Request
+
+Además:
+- Valida que el país exista usando CountriesService
+- Guarda el plan en MongoDB
+
+Ejemplo de body:
+{
+  "countryCode": "COL",
+  "title": "Viaje a Bogotá",
+  "startDate": "2025-03-01",
+  "endDate": "2025-03-05",
+  "notes": "Visitar Monserrate"
+}
+
+GET /travel-plans
+
+Devuelve todos los planes guardados en la base de datos.
+
+Seguridad: API Key Guard
+
+Archivo: src/common/guards/api-key.guard.ts
+Valida que el request incluya el header:x-api-key
+
+Si falta o no coincide con la clave definida, retorna 401 Unauthorized.
+
+
+Middleware de Logging
+
+Archivo: src/common/middlewares/logging.middleware.ts
+
+Registra en consola:
+- Método HTTP
+- URL
+- Timestamp
+- Headers
+- Body del request (si existe)
+- Código de respuesta
+- Tiempo total de ejecución en milisegundos
+
+ejemplo:
+[Request] POST /travel-plans - 2025-11-20T17:22:11.392Z
+[Request Headers] {...}
+[Request Body] {...}
+[Response] POST /travel-plans - Status: 201 - 12ms
+
+
+Pruebas Unitarias (Jest)
+
+Las pruebas incluyen:
+
+CountriesService
+- Manejo de caché
+- Integración con API RestCountries
+- Manejo de errores
+
+CountriesController
+- Delegación hacia el servicio
+
+TravelPlansService
+- Validación del país
+- Manejo de fechas
+- Persistencia en MongoDB
+
+TravelPlansController
+- Delegación
+- Verificación de API key
+
+Ejecutar pruebas:
+npm run test
+
+
+Notas finales
+
+El proyecto está preparado siguiendo buenas prácticas de NestJS:
+- Arquitectura modular
+- Pipes para validación
+- Guards de seguridad
+- Middleware personalizado
+- Consumo de APIs externas
+- Manejo adecuado de excepciones
+- Pruebas unitarias completas
