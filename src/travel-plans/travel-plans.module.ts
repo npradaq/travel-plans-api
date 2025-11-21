@@ -1,0 +1,19 @@
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { TravelPlansService } from './travel-plans.service';
+import { TravelPlansController } from './travel-plans.controller';
+import { TravelPlan, TravelPlanSchema } from './schemas/travel-plan.schema';
+import { CountriesModule } from '../countries/countries.module';
+import { ApiKeyGuard } from '../common/guards/api-key.guard';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([
+      { name: TravelPlan.name, schema: TravelPlanSchema },
+    ]),
+    CountriesModule,
+  ],
+  controllers: [TravelPlansController],
+  providers: [TravelPlansService, ApiKeyGuard],
+})
+export class TravelPlansModule {}
