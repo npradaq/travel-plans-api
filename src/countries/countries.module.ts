@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 import { CountriesService } from './countries.service';
 import { CountriesController } from './countries.controller';
 import { Country, CountrySchema } from './schemas/country.schema';
@@ -12,6 +13,7 @@ import {
 
 @Module({
   imports: [
+    HttpModule,
     MongooseModule.forFeature([
       { name: Country.name, schema: CountrySchema },
       { name: TravelPlan.name, schema: TravelPlanSchema }, // <- nuevo
